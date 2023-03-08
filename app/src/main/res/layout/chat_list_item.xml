@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="5dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/chat_send_item"
+        android:text="@string/stand_in_send_text"
+        android:layout_width="wrap_content"
+        android:textSize="18sp"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="10dp"
+        android:textColor="@color/white"
+        android:background="@drawable/chat_receiver_bubble"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textAlignment="center"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_margin="5dp"/>
+
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/chat_receive_item"
+        android:text="@string/stand_in_receive_text"
+        android:layout_width="wrap_content"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="10dp"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:background="@drawable/chat_sender_bubble"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_margin="5dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">bot</string>
+    <string name="main_activity_receive_message_text">RECEIVE MESSAGE</string>
+    <string name="main_activity_stop_service_text">STOP SERVICE</string>
+    <string name="stand_in_receive_text">Stand in receive text</string>
+    <string name="stand_in_send_text">stand in send text</string>
+</resources>
