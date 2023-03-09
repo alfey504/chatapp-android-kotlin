@@ -10,4 +10,8 @@
 
     <color name="magenta">#EC8FD0</color>
     <color name="light_sale_blue">#9f5afd</color>
+    <color name="light_pink">#FFE9EC</color>
+
+    <color name="title_pink">#FF4081</color>
+    <color name="purple">#3F51B5</color>
 </resources>

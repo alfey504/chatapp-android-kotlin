@@ -1,80 +1,51 @@
 package com.aab.bot.activities
 
-import android.content.IntentFilter
-import android.os.Bundle
+import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.aab.bot.adapters.ChatViewAdapter
+import android.os.Bundle
+import android.widget.Toast
+import com.aab.bot.R
+import com.aab.bot.databinding.ActivityChatBinding
 import com.aab.bot.databinding.ActivityMainBinding
-import com.aab.bot.broadcast_receivers.ChatBroadcastReceiver
-import com.aab.bot.services.ChatService
-import com.aab.bot.viewmodels.MainActivityViewModel
-
 
 class MainActivity : AppCompatActivity() {
 
-    companion object{
-        const val TAG = "MainActivity"
-    }
-
-    private lateinit var viewModel: MainActivityViewModel
     private  lateinit var  binding: ActivityMainBinding
-    private  lateinit var chatBroadcastReceiver: ChatBroadcastReceiver
+    companion object{
+        const val USERNAME_KEY = "username"
+        const val SHARED_PREFERENCE_KEY = "my_prefs"
+        const val DEFAULT_USER = "User X"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel = ViewModelProvider(this)[MainActivityViewModel::class.java]
-
-        binding.mainActivityReceiveMessageButton.setOnClickListener {
-            simulateReceiveMessage()
-        }
-
-        binding.mainActivityStopServiceButton.setOnClickListener {
-           stopService()
-        }
-
-        binding.mainActivityChatListView.layoutManager = LinearLayoutManager(this)
-
-        val adapter = ChatViewAdapter(mutableListOf())
-        binding.mainActivityChatListView.adapter = adapter
-
-        setRecyclerView()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        chatBroadcastReceiver = ChatBroadcastReceiver()
-        val intentFilter = IntentFilter(ChatBroadcastReceiver.CHAT_BROADCAST_RECEIVER_INTENT_ACTION)
-        registerReceiver(chatBroadcastReceiver, intentFilter)
-        chatBroadcastReceiver.setViewModel(viewModel)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        unregisterReceiver(chatBroadcastReceiver)
-    }
-
-    private fun setRecyclerView()
-    {
-        viewModel.getChatData().observe(this){
-            binding.mainActivityChatListView.apply {
-                layoutManager = LinearLayoutManager(applicationContext)
-                adapter = ChatViewAdapter(it)
+        binding.mainActivityStartChatButton.setOnClickListener {
+            if(binding.mainActivityUsernameInput.text.isEmpty()){
+                makeToast("Please enter a username")
+            }else{
+                val sharedPrefs = getSharedPreferences(SHARED_PREFERENCE_KEY, Context.MODE_PRIVATE) ?: return@setOnClickListener
+                with (sharedPrefs.edit()){
+                    putString(USERNAME_KEY, binding.mainActivityUsernameInput.text.toString())
+                    apply()
+                }
+                goToMainActivity()
             }
         }
+
     }
 
-
-    private fun simulateReceiveMessage(){
-        ChatService.startChatServiceWithCommand(this, ChatService.CMD_SIMULATE_RECEIVE_MESSAGE)
+    private fun makeToast(msg: String){
+        val duration = Toast.LENGTH_SHORT
+        val toast = Toast.makeText(applicationContext, msg, duration)
+        toast.show()
     }
 
-    private fun stopService(){
-        ChatService.startChatServiceWithCommand(this, ChatService.CMD_STOP_SERVICE)
+    private fun goToMainActivity(){
+        val intent = Intent(this, ChatActivity::class.java)
+        startActivity(intent)
     }
-
 }

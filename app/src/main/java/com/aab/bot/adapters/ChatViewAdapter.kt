@@ -6,20 +6,20 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.aab.bot.R
+import com.aab.bot.data_models.Messages
 
-class ChatViewAdapter(private var data: MutableList<String>): RecyclerView.Adapter<ChatViewAdapter.ViewHolder>() {
+class ChatViewAdapter(private var data: MutableList<Messages>): RecyclerView.Adapter<ChatViewAdapter.ViewHolder>() {
 
     class ViewHolder(view: View): RecyclerView.ViewHolder(view){
-        val textView: TextView
+        val message: TextView
+        val username: TextView
 
         init {
-            textView = view.findViewById<TextView>(R.id.chat_receive_item)
+            message = view.findViewById<TextView>(R.id.chat_receive_item)
+            username = view.findViewById<TextView>(R.id.chat_list_item_username)
         }
     }
 
-    fun setData(data: MutableList<String>){
-        this.data = data
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.chat_list_item, parent, false)
@@ -27,8 +27,10 @@ class ChatViewAdapter(private var data: MutableList<String>): RecyclerView.Adapt
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.textView.visibility = View.VISIBLE
-        holder.textView.text = data[position]
+        holder.message.visibility = View.VISIBLE
+        holder.message.text = data[position].message
+        holder.username.visibility = View.VISIBLE
+        holder.username.text = data[position].userName
     }
 
     override fun getItemCount(): Int {

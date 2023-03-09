@@ -28,6 +28,8 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+        <activity android:name=".activities.ChatActivity"
+            android:exported="true"/>
     </application>
 
 </manifest>

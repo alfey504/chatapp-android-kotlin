@@ -4,4 +4,10 @@
     <string name="main_activity_stop_service_text">STOP SERVICE</string>
     <string name="stand_in_receive_text">Stand in receive text</string>
     <string name="stand_in_send_text">stand in send text</string>
+    <string name="notification_username">username</string>
+    <string name="notification_message">message</string>
+    <string name="notification_date">date</string>
+    <string name="username_input_hint">Username</string>
+    <string name="main_activity_start_text">START</string>
+    <string name="chat_list_username_stand_in">username</string>
 </resources>

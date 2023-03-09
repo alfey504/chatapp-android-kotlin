@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="10dp">
+
+    <ImageView
+        android:id="@+id/notification_image"
+        android:src="@drawable/avatar_png"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp">
+
+        <TextView
+            android:id="@+id/notification_name"
+            android:text="@string/notification_username"
+            android:textColor="@color/title_pink"
+            android:gravity="top"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_width="250dp"
+            android:layout_height="20dp"/>
+
+        <TextView
+            android:id="@+id/notification_message"
+            android:text="@string/notification_message"
+            android:gravity="start|center"
+            android:textSize="14sp"
+            android:layout_width="250dp"
+            android:layout_height="20dp"/>
+
+        <TextView
+            android:id="@+id/notification_date"
+            android:textColor="@color/design_default_color_primary"
+            android:text="@string/notification_date"
+            android:textSize="14sp"
+            android:layout_width="250dp"
+            android:layout_height="20dp"/>
+    </LinearLayout>
+
+</LinearLayout>

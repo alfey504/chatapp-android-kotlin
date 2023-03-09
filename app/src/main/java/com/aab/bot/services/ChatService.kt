@@ -6,7 +6,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
-import com.aab.bot.broadcast_receivers.ChatBroadcastReceiver
+import com.aab.bot.activities.MainActivity
+import com.aab.bot.broadcast_receivers.ChatActivityBroadcastReceiver
 import com.aab.bot.notification.NotificationHelper
 
 
@@ -15,6 +16,8 @@ class ChatService : Service(){
     private lateinit var notificationService: NotificationHelper
 
     companion object{
+
+        var USERNAME = MainActivity.DEFAULT_USER
 
         // Tag for logging
         const val TAG = "ChatService"
@@ -33,10 +36,13 @@ class ChatService : Service(){
 
         // start the chat Service with a command
         fun startChatServiceWithCommand(context: Context, command: Int){
-            val bundle = Bundle()
-            bundle.putInt(MSG_CMD, command)
-            val intent = Intent(context, ChatService::class.java)
-            intent.putExtras(bundle)
+            val bundle = Bundle().apply {
+                putInt(MSG_CMD, command)
+            }
+            val intent = Intent(context, ChatService::class.java).apply {
+                putExtras(bundle)
+            }
+
             context.startService(intent)
         }
     }
@@ -50,15 +56,10 @@ class ChatService : Service(){
 
         notificationService = NotificationHelper(this)
 
-        if(intent != null){
-            val bundle: Bundle = if(intent.extras == null){
-                val bundle = Bundle()
-                bundle.putInt(MSG_CMD, CMD_ERROR_BUNDLE_NOT_FOUND)
-                bundle
-            }else{
-                intent.extras!!
+        intent?.let {
+            it.extras?.let { bundle ->
+                handleCommand(bundle)
             }
-            handleCommand(bundle)
         }
         return START_STICKY
     }
@@ -67,13 +68,13 @@ class ChatService : Service(){
         when(bundle.getInt(MSG_CMD)) {
             CMD_SIMULATE_RECEIVE_MESSAGE -> {
                 for (msg in messages){
-                    broadcastMessage(msg)
+                    broadcastMessage(msg, getUsername())
                     //send notification
-                    notificationService.displaySimpleNotification(msg, "New Message")
+                    notificationService.displayCustomNotification(msg, username = getUsername())
                 }
             }
             CMD_STOP_SERVICE -> {
-                notificationService.displaySimpleNotification("service has been stopped", "Service Stopped")
+                notificationService.displaySimpleNotification("ChatBot Stopped: 98", "Service Stopped")
                 stopSelf()
             }
             CMD_ERROR_BUNDLE_NOT_FOUND -> {
@@ -89,14 +90,26 @@ class ChatService : Service(){
         stopSelf()
     }
 
-    private fun broadcastMessage(msg: String){
-        val bundle = Bundle()
-        bundle.putInt(ChatBroadcastReceiver.BROD_CMD, ChatBroadcastReceiver.BROD_CMD_RECEIVED_MESSAGE)
-        bundle.putString(ChatBroadcastReceiver.BROD_RECEIVED_MESSAGE, msg)
+    private fun broadcastMessage(msg: String, username: String){
+        val bundle = Bundle().apply {
+            putInt(ChatActivityBroadcastReceiver.BROD_CMD, ChatActivityBroadcastReceiver.BROD_CMD_RECEIVED_MESSAGE)
+            putString(ChatActivityBroadcastReceiver.BROD_RECEIVED_MESSAGE, msg)
+            putString(ChatActivityBroadcastReceiver.BROD_RECEIVED_USERNAME, username)
+        }
 
-        val chatBroadcastIntent = Intent(ChatBroadcastReceiver.CHAT_BROADCAST_RECEIVER_INTENT_ACTION)
-        chatBroadcastIntent.putExtras(bundle)
-
+        val chatBroadcastIntent = Intent(ChatActivityBroadcastReceiver.CHAT_BROADCAST_RECEIVER_INTENT_ACTION).apply {
+            putExtras(bundle)
+        }
         sendBroadcast(chatBroadcastIntent)
+    }
+
+    private fun setUser(username: String){
+        USERNAME = username
+    }
+
+    private fun getUsername(): String {
+        val sharedPrefs =
+            getSharedPreferences(MainActivity.SHARED_PREFERENCE_KEY, Context.MODE_PRIVATE)
+        return sharedPrefs.getString(MainActivity.USERNAME_KEY, MainActivity.DEFAULT_USER) ?: MainActivity.DEFAULT_USER
     }
 }
